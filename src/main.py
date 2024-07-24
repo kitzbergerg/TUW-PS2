@@ -20,18 +20,14 @@ def run_on_file(file_path):
     print(ast)
 
     # Create an instance of the interpreter
-    # interpreter = Interpreter()
-
+    interpreter = Interpreter()
     # Parse and execute the code
-    # result = interpreter.parse_and_execute(code)
-
-    # Print the result
-    # print(result)
+    interpreter.interpret(ast)
 
 
 if __name__ == '__main__':
-    run_on_file('../test/func_no_params.lang')
-    run_on_file('../test/list_at_index.lang')
-    run_on_file('../test/list_map.lang')
-    run_on_file('../test/list_reduce.lang')
     run_on_file('../test/plus.lang')
+    #run_on_file('../test/list_reduce.lang')
+    #run_on_file('../test/func_no_params.lang')
+    #run_on_file('../test/list_at_index.lang')
+    #run_on_file('../test/list_map.lang')
