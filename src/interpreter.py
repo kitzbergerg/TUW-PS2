@@ -21,12 +21,14 @@ class EvaluationResult:
     def __init__(self, type: Type, value: any, environment: Optional[dict] = None):
         self.type = type
         self.value = value
-        # self.environment = environment
+        self.environment = environment
 
 
 class Environment:
-    def __init__(self):
-        self.variables = {}
+    def __init__(self, variables=None):
+        if variables is None:
+            variables = {}
+        self.variables = variables
 
     def get_variable(self, name: str) -> Optional[EvaluationResult]:
         if name in self.variables:
@@ -146,16 +148,24 @@ class Interpreter():
                 function = self.find_in_env(node.children[0])
                 assert function.type == Type.FUNCTION
                 parameter_names, function_body = function.value
-                environment = Environment()
+                # Configure env such that is the same as where the function was defined
+                current_env = self.stack.pop()
+                environment = Environment(function.environment)
+                if environment is None:
+                    environment = Environment()
+                # TODO: allow less params and return new function
                 for i, param in enumerate(parameter_values):
                     environment.set_variable(parameter_names[i], param)
                 self.stack.append(environment)
                 result = self.visit(function_body)
                 self.stack.pop()
+                self.stack.append(current_env)
             return result
 
         if node.type == "function_definition":
-            return EvaluationResult(Type.FUNCTION, node.children)
+            # TODO: think about what happens if a function that captures something gets returned
+            #  Maybe instead the variables inside the function have to be interpreted (should work without requiring recursive calls)
+            return EvaluationResult(Type.FUNCTION, node.children, environment=dict(self.stack[-1].variables))
 
         if node.type == "block":
             self.stack.append(Environment())
