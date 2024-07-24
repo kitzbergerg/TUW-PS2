@@ -119,7 +119,11 @@ class Interpreter():
     def __init__(self):
         self.stack = []
 
-    def visit(self, node: Node):
+    def visit(self, node: Node | str):
+        if isinstance(node, str):
+            variable = self.find_in_env(node)
+            return variable
+
         if node.type == "program":
             self.stack.append(Environment())
             for child in node.children:
