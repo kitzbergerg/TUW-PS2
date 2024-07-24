@@ -1,43 +1,46 @@
 import ply.lex as lex
 
+# List of token names.   This is always required
+reserved = {
+    'plus': 'PLUS',
+    'minus': 'MINUS',
+    'mult': 'MULT',
+    'div': 'DIV',
+    'mod': 'MOD',
+    'if': 'IF',
+
+    'eq': 'EQ',
+    'not': 'NOT',
+    'and': 'AND',
+    'or': 'OR',
+    'less_than': 'LESS',
+    'greater_than': 'GREATER',
+
+    'print': 'PRINT',
+
+    'head': 'HEAD',
+    'tail': 'TAIL',
+    'is_empty': 'IS_EMPTY',
+    'concat': 'CONCAT',
+}
+tokens = [
+             'NUMBER',
+             'PIPE',
+             'LPAREN',
+             'RPAREN',
+             'L_SQUARE_BRACKET',
+             'R_SQUARE_BRACKET',
+             'L_CURLY_BRACKET',
+             'R_CURLY_BRACKET',
+             'COMMA',
+             'ASSIGN',
+             'ID'
+         ] + list(reserved.values())
+
 
 class Lexer(object):
-    # List of token names.   This is always required
-    reserved = {
-        'plus': 'PLUS',
-        'minus': 'MINUS',
-        'mult': 'MULT',
-        'div': 'DIV',
-        'mod': 'MOD',
-        'if': 'IF',
-
-        'eq': 'EQ',
-        'not': 'NOT',
-        'and': 'AND',
-        'or': 'OR',
-        'less_than': 'LESS',
-        'greater_than': 'GREATER',
-
-        'print': 'PRINT',
-
-        'head': 'HEAD',
-        'tail': 'TAIL',
-        'is_empty': 'IS_EMPTY',
-        'concat': 'CONCAT',
-    }
-    tokens = [
-                 'NUMBER',
-                 'PIPE',
-                 'LPAREN',
-                 'RPAREN',
-                 'L_SQUARE_BRACKET',
-                 'R_SQUARE_BRACKET',
-                 'L_CURLY_BRACKET',
-                 'R_CURLY_BRACKET',
-                 'COMMA',
-                 'ASSIGN',
-                 'ID'
-             ] + list(reserved.values())
+    reserved = reserved
+    tokens = tokens
 
     # Regular expression rules for simple tokens
     t_PIPE = r'\|'
@@ -49,6 +52,9 @@ class Lexer(object):
     t_R_CURLY_BRACKET = r'}'
     t_COMMA = r','
     t_ASSIGN = r'='
+
+    def __init__(self):
+        self.lexer = None
 
     def t_ID(self, t):
         r'[a-z_]+'

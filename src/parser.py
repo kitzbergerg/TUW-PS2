@@ -1,0 +1,107 @@
+import ply.yacc as yacc
+from lexer import Lexer
+from ast_nodes import *
+
+
+class Parser(object):
+    tokens = Lexer.tokens
+
+    def p_program(self, p):
+        '''program : statement_list'''
+        p[0] = Node('program', children=p[1])
+
+    def p_statement_list(self, p):
+        '''statement_list : statement
+                          | statement statement_list'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = [p[1]] + p[2]
+
+    def p_statement(self, p):
+        '''statement : expression
+                     | assignment'''
+        p[0] = p[1]
+
+    def p_expression(self, p):
+        '''expression : function_call
+                      | function_definition
+                      | block
+                      | integer
+                      | list
+                      | ID'''
+        p[0] = p[1]
+
+    def p_assignment(self, p):
+        '''assignment : ID ASSIGN expression'''
+        p[0] = AssignmentNode(p[1], p[3])
+
+    def p_function_call(self, p):
+        '''function_call : ID LPAREN argument_list RPAREN
+                         | AND LPAREN argument_list RPAREN
+                         | CONCAT LPAREN argument_list RPAREN
+                         | DIV LPAREN argument_list RPAREN
+                         | EQ LPAREN argument_list RPAREN
+                         | GREATER LPAREN argument_list RPAREN
+                         | HEAD LPAREN argument_list RPAREN
+                         | IF LPAREN argument_list RPAREN
+                         | IS_EMPTY LPAREN argument_list RPAREN
+                         | LESS LPAREN argument_list RPAREN
+                         | MINUS LPAREN argument_list RPAREN
+                         | MOD LPAREN argument_list RPAREN
+                         | MULT LPAREN argument_list RPAREN
+                         | NOT LPAREN argument_list RPAREN
+                         | OR LPAREN argument_list RPAREN
+                         | PLUS LPAREN argument_list RPAREN
+                         | PRINT LPAREN argument_list RPAREN
+                         | TAIL LPAREN argument_list RPAREN'''
+        p[0] = FunctionCallNode(p[1], p[3])
+
+    def p_function_definition(self, p):
+        '''function_definition : ID ASSIGN PIPE parameter_list PIPE expression'''
+        p[0] = FunctionDefinitionNode(p[1], p[4], p[6])
+
+    def p_block(self, p):
+        '''block : L_CURLY_BRACKET statement_list R_CURLY_BRACKET'''
+        p[0] = Node('block', children=p[1])
+
+    def p_integer(self, p):
+        '''integer : NUMBER'''
+        p[0] = IntegerNode(p[1])
+
+    def p_list(self, p):
+        '''list : L_SQUARE_BRACKET element_list R_SQUARE_BRACKET'''
+        p[0] = ListNode(p[2])
+
+    def p_argument_list(self, p):
+        '''argument_list : expression
+                         | expression COMMA argument_list'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = [p[1]] + p[3]
+
+    def p_parameter_list(self, p):
+        '''parameter_list : ID
+                          | ID COMMA parameter_list'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = [p[1]] + p[3]
+
+    def p_element_list(self, p):
+        '''element_list : expression
+                          | expression COMMA element_list'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = [p[1]] + p[3]
+
+    def p_error(self, p):
+        print(f"Syntax error at {p.value!r}")
+
+    def build(self, **kwargs):
+        self.parser = yacc.yacc(module=self, **kwargs)
+
+    def parse(self, text):
+        return self.parser.parse(text, lexer=Lexer().build())
