@@ -29,7 +29,8 @@ class Parser(object):
                       | block
                       | integer
                       | list
-                      | ID'''
+                      | ID
+                      | function_name'''
         p[0] = p[1]
 
     def p_assignment(self, p):
@@ -37,32 +38,13 @@ class Parser(object):
         p[0] = AssignmentNode(p[1], p[3])
 
     def p_function_call(self, p):
-        # TODO: define number of params for each variant explicitly
-        #  Make sure that functional prog is still valid. I.e. if 2 params are expected -> 1 param is also ok; in this case create new function
         # TODO: allow functions with 0 params
-        '''function_call : ID LPAREN argument_list RPAREN
-                         | AND LPAREN argument_list RPAREN
-                         | CONCAT LPAREN argument_list RPAREN
-                         | DIV LPAREN argument_list RPAREN
-                         | EQ LPAREN argument_list RPAREN
-                         | GREATER LPAREN argument_list RPAREN
-                         | HEAD LPAREN argument_list RPAREN
-                         | IF LPAREN argument_list RPAREN
-                         | IS_EMPTY LPAREN argument_list RPAREN
-                         | LESS LPAREN argument_list RPAREN
-                         | MINUS LPAREN argument_list RPAREN
-                         | MOD LPAREN argument_list RPAREN
-                         | MULT LPAREN argument_list RPAREN
-                         | NOT LPAREN argument_list RPAREN
-                         | OR LPAREN argument_list RPAREN
-                         | PLUS LPAREN argument_list RPAREN
-                         | PRINT LPAREN argument_list RPAREN
-                         | TAIL LPAREN argument_list RPAREN'''
+        '''function_call : function_name LPAREN argument_list RPAREN'''
         p[0] = FunctionCallNode(p[1], p[3])
 
     def p_function_definition(self, p):
-        '''function_definition : ID ASSIGN PIPE parameter_list PIPE expression'''
-        p[0] = FunctionDefinitionNode(p[1], p[4], p[6])
+        '''function_definition : PIPE parameter_list PIPE expression'''
+        p[0] = FunctionDefinitionNode(p[2], p[4])
 
     def p_block(self, p):
         '''block : L_CURLY_BRACKET block_list R_CURLY_BRACKET'''
@@ -95,7 +77,9 @@ class Parser(object):
 
     def p_parameter_list(self, p):
         '''parameter_list : ID
-                          | ID COMMA parameter_list'''
+                          | function_name
+                          | ID COMMA parameter_list
+                          | function_name COMMA parameter_list'''
         if len(p) == 2:
             p[0] = [p[1]]
         else:
@@ -108,6 +92,27 @@ class Parser(object):
             p[0] = [p[1]]
         else:
             p[0] = [p[1]] + p[3]
+
+    def p_function_name(self, p):
+        '''function_name : ID
+                         | AND
+                         | CONCAT
+                         | DIV
+                         | EQ
+                         | GREATER
+                         | HEAD
+                         | IF
+                         | IS_EMPTY
+                         | LESS
+                         | MINUS
+                         | MOD
+                         | MULT
+                         | NOT
+                         | OR
+                         | PLUS
+                         | PRINT
+                         | TAIL'''
+        p[0] = p[1]
 
     def p_error(self, p):
         print(f"Syntax error at {p.value!r}")

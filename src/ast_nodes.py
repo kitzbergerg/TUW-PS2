@@ -57,15 +57,15 @@ class FunctionCallNode(Node):
 
 
 class FunctionDefinitionNode(Node):
-    def __init__(self, name, params, body):
-        super().__init__('function_definition', children=[name, params, body])
+    def __init__(self, params, body):
+        super().__init__('function_definition', children=[params, body])
 
     def str_inner(self, depth=0):
         tabs = '\t' * depth
 
-        val = f'{tabs}{self.type} - {self.children[0]}({", ".join(self.children[1])})\n'
-        if isinstance(self.children[2], Node):
-            val += self.children[2].str_inner(depth + 1)
+        val = f'{tabs}{self.type} - {",".join(self.children[0])}\n'
+        if isinstance(self.children[1], Node):
+            val += self.children[1].str_inner(depth + 1)
         else:
             val += '\t' * (depth + 1)
             val += str(self.children[2])

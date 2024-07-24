@@ -4,6 +4,8 @@ from src.parser import Parser
 
 
 def run_on_file(file_path):
+    print(f"Running on {file_path}...")
+
     # Read the code from a file
     with open(file_path, 'r') as file:
         code = file.read()

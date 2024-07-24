@@ -11,5 +11,5 @@ print(sum)
 
 reduce_length = reduce(0, |acc,y| plus(acc, 1))
 my_list = [1,2,3]
-length = reduce_length my_list
+length = reduce_length(my_list)
 print(length)
