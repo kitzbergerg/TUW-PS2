@@ -84,9 +84,7 @@ class Parser(object):
 
     def p_parameter_list(self, p):
         '''parameter_list : ID
-                          | function_name
-                          | ID COMMA parameter_list
-                          | function_name COMMA parameter_list'''
+                          | ID COMMA parameter_list'''
         if len(p) == 2:
             p[0] = [p[1]]
         else:
