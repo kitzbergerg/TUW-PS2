@@ -38,13 +38,20 @@ class Parser(object):
         p[0] = AssignmentNode(p[1], p[3])
 
     def p_function_call(self, p):
-        # TODO: allow functions with 0 params
-        '''function_call : function_name LPAREN argument_list RPAREN'''
-        p[0] = FunctionCallNode(p[1], p[3])
+        '''function_call : function_name LPAREN argument_list RPAREN
+                         | function_name LPAREN RPAREN'''
+        if len(p) == 4:
+            p[0] = FunctionCallNode(p[1], [])
+        else:
+            p[0] = FunctionCallNode(p[1], p[3])
 
     def p_function_definition(self, p):
-        '''function_definition : PIPE parameter_list PIPE expression'''
-        p[0] = FunctionDefinitionNode(p[2], p[4])
+        '''function_definition : PIPE parameter_list PIPE expression
+                               | PIPE PIPE expression'''
+        if len(p) == 4:
+            p[0] = FunctionDefinitionNode([], p[3])
+        else:
+            p[0] = FunctionDefinitionNode(p[2], p[4])
 
     def p_block(self, p):
         '''block : L_CURLY_BRACKET block_list R_CURLY_BRACKET'''

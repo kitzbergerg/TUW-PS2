@@ -63,7 +63,7 @@ class FunctionDefinitionNode(Node):
     def str_inner(self, depth=0):
         tabs = '\t' * depth
 
-        val = f'{tabs}{self.type} - {",".join(self.children[0])}\n'
+        val = f'{tabs}{self.type} - |{",".join(self.children[0])}|\n'
         if isinstance(self.children[1], Node):
             val += self.children[1].str_inner(depth + 1)
         else:
