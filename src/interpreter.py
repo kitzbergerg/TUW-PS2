@@ -139,7 +139,9 @@ class Interpreter():
 
             result = execute_if_builtin(node, parameter_values)
             if result is None:
-                parameter_names, function_body = self.find_in_env(node.children[0]).value
+                function = self.find_in_env(node.children[0])
+                assert function.type == Type.FUNCTION
+                parameter_names, function_body = function.value
                 environment = Environment()
                 for i, param in enumerate(parameter_values):
                     environment.set_variable(parameter_names[i], param)
@@ -149,7 +151,7 @@ class Interpreter():
             return result
 
         if node.type == "function_definition":
-            return EvaluationResult(node.children[0], node.children[1])
+            return EvaluationResult(Type.FUNCTION, node.children)
 
         if node.type == "block":
             self.stack.append(Environment())
@@ -170,7 +172,6 @@ class Interpreter():
     def find_in_env(self, name: str) -> EvaluationResult:
         for scope in reversed(self.stack):
             result = scope.get_variable(name)
-            print(result)
             if result:
                 return result
         raise Exception(f"Variable {name} not found!")
