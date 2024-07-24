@@ -49,9 +49,14 @@ class Parser(object):
         '''function_definition : PIPE parameter_list PIPE expression
                                | PIPE PIPE expression'''
         if len(p) == 4:
-            p[0] = FunctionDefinitionNode([], p[3])
+            params = []
+            body = p[3]
         else:
-            p[0] = FunctionDefinitionNode(p[2], p[4])
+            params = p[2]
+            body = p[4]
+        if not isinstance(body, BlockNode):
+            body = BlockNode([], body)
+        p[0] = FunctionDefinitionNode(params, body)
 
     def p_block(self, p):
         '''block : L_CURLY_BRACKET block_list R_CURLY_BRACKET'''

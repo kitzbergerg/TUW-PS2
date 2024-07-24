@@ -1,5 +1,6 @@
 my_func = || {
   my_var = 2
+  # TODO: make sure they act the same
   || || print(plus(my_var, 0))
 }
 my_func = my_func()
@@ -8,6 +9,7 @@ my_func()
 
 my_func = || {
   my_var = 2
+  # TODO: make sure they act the same
   || {
     || print(plus(my_var, 0))
   }

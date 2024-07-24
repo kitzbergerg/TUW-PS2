@@ -24,6 +24,7 @@ reserved = {
     'concat': 'CONCAT',
 }
 tokens = [
+             'COMMENT',
              'NUMBER',
              'PIPE',
              'LPAREN',
@@ -66,6 +67,11 @@ class Lexer(object):
         r'\d+'
         t.value = int(t.value)
         return t
+
+    # Ignore comments
+    def t_COMMENT(self, t):
+        r'\#.*'
+        pass
 
     # Define a rule so we can track line numbers
     def t_newline(self, t):

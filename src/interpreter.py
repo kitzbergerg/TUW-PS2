@@ -163,7 +163,7 @@ class Interpreter():
             return result
 
         if node.type == "function_definition":
-            # TODO: think about what happens if a function that captures something gets returned
+            # TODO: think about what happens if a function that captures something gets returned (see returned_func_captures_fails.lang)
             #  Maybe instead the variables inside the function have to be interpreted (should work without requiring recursive calls)
             return EvaluationResult(Type.FUNCTION, node.children, environment=dict(self.stack[-1].variables))
 
