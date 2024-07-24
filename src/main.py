@@ -26,10 +26,17 @@ def run_on_file(file_path):
 
 
 if __name__ == '__main__':
+    # Positive test runs:
     run_on_file('../test/plus.lang')
     run_on_file('../test/func_no_params.lang')
-    #run_on_file('../test/define_var_after_func_fails.lang')
-    run_on_file('../test/returned_func_captures_fails.lang')
-    #run_on_file('../test/list_map.lang')
-    #run_on_file('../test/list_at_index.lang')
-    #run_on_file('../test/list_reduce.lang')
+    run_on_file('../test/returned_func_captures.lang')
+    # run_on_file('../test/list_map.lang')
+    # run_on_file('../test/list_at_index.lang')
+    # run_on_file('../test/list_reduce.lang')
+
+    # Negative test runs:
+    try:
+        run_on_file('../test/define_var_after_func_fails.lang')
+        assert False
+    except Exception as e:
+        pass
