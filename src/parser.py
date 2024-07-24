@@ -37,6 +37,9 @@ class Parser(object):
         p[0] = AssignmentNode(p[1], p[3])
 
     def p_function_call(self, p):
+        # TODO: define number of params for each variant explicitly
+        #  Make sure that functional prog is still valid. I.e. if 2 params are expected -> 1 param is also ok; in this case create new function
+        # TODO: allow functions with 0 params
         '''function_call : ID LPAREN argument_list RPAREN
                          | AND LPAREN argument_list RPAREN
                          | CONCAT LPAREN argument_list RPAREN
@@ -62,8 +65,17 @@ class Parser(object):
         p[0] = FunctionDefinitionNode(p[1], p[4], p[6])
 
     def p_block(self, p):
-        '''block : L_CURLY_BRACKET statement_list R_CURLY_BRACKET'''
-        p[0] = Node('block', children=p[1])
+        '''block : L_CURLY_BRACKET block_list R_CURLY_BRACKET'''
+        return_val = p[2].pop()
+        p[0] = BlockNode(p[2], return_val)
+
+    def p_block_list(self, p):
+        '''block_list : expression
+                      | statement block_list'''
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = [p[1]] + p[2]
 
     def p_integer(self, p):
         '''integer : NUMBER'''
@@ -91,7 +103,7 @@ class Parser(object):
 
     def p_element_list(self, p):
         '''element_list : expression
-                          | expression COMMA element_list'''
+                        | expression COMMA element_list'''
         if len(p) == 2:
             p[0] = [p[1]]
         else:

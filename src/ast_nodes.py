@@ -20,6 +20,11 @@ class FunctionDefinitionNode(Node):
         super().__init__('function_definition', children=[name, params, body])
 
 
+class BlockNode(Node):
+    def __init__(self, statements, return_val):
+        super().__init__('block', children=[statements, return_val])
+
+
 class IntegerNode(Node):
     def __init__(self, value):
         super().__init__('integer', value=value)
