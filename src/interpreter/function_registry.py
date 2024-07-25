@@ -106,7 +106,6 @@ functions = {
     "is_empty": FunctionExecutor("is_empty", [Type.LIST], _is_empty),
     "concat": FunctionExecutor("concat", [Type.LIST, Type.LIST], _concat),
 
-    "if": FunctionExecutor("if", [Type.BOOLEAN, None, None], _if),
     "print": FunctionExecutor("print", [None], _print),
 }
 

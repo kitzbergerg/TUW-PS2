@@ -86,6 +86,7 @@ class Interpreter:
                         parameter_env.set_variable(parameter_names[i], param)
                     function.stack.append(parameter_env)
                     result = Interpreter(function.stack)._visit(function_body)
+                    function.stack.pop()
                 else:
                     raise Exception(
                         f"Invalid parameter count for function call. Expected {len(parameter_names)}, got {len(parameter_values)}")
@@ -107,6 +108,14 @@ class Interpreter:
 
         if node.type == "list":
             return EvaluationResult(Type.LIST, node.children)
+
+        if node.type == "if_else":
+            condition = self._visit(node.children[0])
+            assert condition.type == Type.BOOLEAN
+            if condition.value:
+                return self._visit(node.children[1])
+            else:
+                return self._visit(node.children[2])
 
         raise Exception(f"Cannot evaluate type {node.type}")
 

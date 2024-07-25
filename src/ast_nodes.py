@@ -91,6 +91,11 @@ class BlockNode(Node):
         return val
 
 
+class IfElseNode(Node):
+    def __init__(self, condition, expression1, expression2):
+        super().__init__('if_else', children=[condition, expression1, expression2])
+
+
 class IntegerNode(Node):
     def __init__(self, value):
         super().__init__('integer', value=value)

@@ -8,6 +8,7 @@ reserved = {
     'div': 'DIV',
     'mod': 'MOD',
     'if': 'IF',
+    'else': 'ELSE',
 
     'eq': 'EQ',
     'not': 'NOT',
