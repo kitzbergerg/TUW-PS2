@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from src.ast_nodes import Node
+from src.ast_nodes import Node, BlockNode, AssignmentNode, FunctionDefinitionNode, FunctionCallNode, IntegerNode
 
 
 class Type(Enum):
@@ -88,6 +88,12 @@ def execute_if_builtin(node: Node, params: list[EvaluationResult]) -> Optional[E
         result = params[0].value - params[1].value
         return EvaluationResult(Type.INTEGER, result)
     if node.children[0] == "mult":
+        if len(params) == 1:
+            # Create a new function like:
+            #   mult(2) -> |__RESERVED__| mult(2, __RESERVED__)
+            new_body = FunctionCallNode(node.children[0], [IntegerNode(params[0].value), "__RESERVED__"])
+            new_function = FunctionDefinitionNode(["__RESERVED__"], new_body)
+            return EvaluationResult(Type.FUNCTION, new_function.children, environment=[])
         assert len(params) == 2 and params[0].type == Type.INTEGER and params[1].type == Type.INTEGER
         result = params[0].value * params[1].value
         return EvaluationResult(Type.INTEGER, result)
@@ -102,7 +108,7 @@ def execute_if_builtin(node: Node, params: list[EvaluationResult]) -> Optional[E
 
     if node.children[0] == "head":
         assert len(params) == 1 and params[0].type == Type.LIST
-        result = params[0][0]
+        result = params[0].value[0]
         return EvaluationResult(result.type, result)
     if node.children[0] == "tail":
         assert len(params) == 1 and params[0].type == Type.LIST
@@ -127,6 +133,30 @@ def execute_if_builtin(node: Node, params: list[EvaluationResult]) -> Optional[E
         return EvaluationResult(Type.UNIT, None)
 
     return None
+
+
+def create_new_function(function: EvaluationResult, parameter_values: list[any]):
+    # Create a new function like:
+    #   my_func = |a,b| {
+    #       mult(plus(a,b),b)
+    #   }
+    #   my_func(2) -> |b| {
+    #       a = 2
+    #       mult(plus(a,b),b)
+    #   }
+    parameter_names, function_body, environment = function
+    assert isinstance(function_body, BlockNode)
+    assert len(parameter_names) > len(parameter_values)
+
+    new_params = parameter_names[len(parameter_values):]
+    assignments = []
+    for i, value in enumerate(parameter_values):
+        assignments.append(AssignmentNode(parameter_names[i], value))
+    values, return_val = function_body.children
+    new_body = BlockNode(assignments + values, return_val)
+    new_function = FunctionDefinitionNode(new_params, new_body)
+
+    return EvaluationResult(Type.FUNCTION, new_function.children, environment=environment.copy_stack())
 
 
 class Interpreter:
@@ -163,13 +193,17 @@ class Interpreter:
                 assert function.type == Type.FUNCTION
                 parameter_names, function_body = function.value
 
-                # TODO: allow less params and return new function
-                parameter_env = Environment()
-                for i, param in enumerate(parameter_values):
-                    parameter_env.set_variable(parameter_names[i], param)
-                function.stack.append(parameter_env)
-
-                result = Interpreter(function.stack).visit(function_body)
+                if len(parameter_values) < len(parameter_names):
+                    return create_new_function(function, parameter_values)
+                elif len(parameter_values) == len(parameter_names):
+                    parameter_env = Environment()
+                    for i, param in enumerate(parameter_values):
+                        parameter_env.set_variable(parameter_names[i], param)
+                    function.stack.append(parameter_env)
+                    result = Interpreter(function.stack).visit(function_body)
+                else:
+                    raise Exception(
+                        f"Invalid parameter count for function call. Expected {len(parameter_names)}, got {len(parameter_values)}")
             return result
 
         if node.type == "function_definition":
