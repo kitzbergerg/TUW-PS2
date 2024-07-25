@@ -17,15 +17,27 @@ class Type(Enum):
     UNIT = 4
 
 
+class IEnvironment:
+    def __init__(self, variables=None):
+        pass
+
+    def get_variable(self, name):
+        pass
+
+    def set_variable(self, name, result):
+        pass
+
+
 class EvaluationResult:
-    def __init__(self, type: Type, value: any, environment: Optional[dict] = None):
+    def __init__(self, type: Type, value: any, environment: Optional[list[IEnvironment]] = None):
         self.type = type
         self.value = value
-        self.environment = environment
+        self.stack = environment
 
 
-class Environment:
+class Environment(IEnvironment):
     def __init__(self, variables=None):
+        super().__init__(variables)
         if variables is None:
             variables = {}
         self.variables = variables
@@ -112,14 +124,16 @@ def execute_if_builtin(node: Node, params: list[EvaluationResult]) -> Optional[E
     if node.children[0] == "print":
         assert len(params) == 1
         print(params[0].value)
-        return EvaluationResult(Type.UNIT, Node)
+        return EvaluationResult(Type.UNIT, None)
 
     return None
 
 
-class Interpreter():
-    def __init__(self):
+class Interpreter:
+    def __init__(self, stack: list[Environment] = None):
         self.stack = []
+        if stack is not None:
+            self.stack = stack
 
     def visit(self, node: Node | str):
         if isinstance(node, str):
@@ -148,24 +162,18 @@ class Interpreter():
                 function = self.find_in_env(node.children[0])
                 assert function.type == Type.FUNCTION
                 parameter_names, function_body = function.value
-                # Configure env such that is the same as where the function was defined
-                current_env = self.stack.pop()
-                environment = Environment(function.environment)
-                if environment is None:
-                    environment = Environment()
+
                 # TODO: allow less params and return new function
+                parameter_env = Environment()
                 for i, param in enumerate(parameter_values):
-                    environment.set_variable(parameter_names[i], param)
-                self.stack.append(environment)
-                result = self.visit(function_body)
-                self.stack.pop()
-                self.stack.append(current_env)
+                    parameter_env.set_variable(parameter_names[i], param)
+                function.stack.append(parameter_env)
+
+                result = Interpreter(function.stack).visit(function_body)
             return result
 
         if node.type == "function_definition":
-            # TODO: think about what happens if a function that captures something gets returned (see returned_func_captures.lang)
-            #  Maybe instead the variables inside the function have to be interpreted (should work without requiring recursive calls)
-            return EvaluationResult(Type.FUNCTION, node.children, environment=dict(self.stack[-1].variables))
+            return EvaluationResult(Type.FUNCTION, node.children, environment=self.copy_stack())
 
         if node.type == "block":
             self.stack.append(Environment())
@@ -189,6 +197,9 @@ class Interpreter():
             if result:
                 return result
         raise Exception(f"Variable {name} not found!")
+
+    def copy_stack(self) -> list[Environment]:
+        return [Environment(x.variables.copy()) for x in self.stack]
 
     def interpret(self, ast):
         self.visit(ast)
