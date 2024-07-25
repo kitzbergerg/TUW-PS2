@@ -17,7 +17,9 @@ class Type(Enum):
 
 class IEnvironment:
     def __init__(self, variables=None):
-        pass
+        if variables is None:
+            variables = {}
+        self.variables = variables
 
     def get_variable(self, name):
         pass
@@ -32,13 +34,13 @@ class EvaluationResult:
         self.value = value
         self.stack = stack
 
+    def __repr__(self):
+        return f"EvaluationResult(type={self.type}, value={self.value}, stack={self.stack})"
+
 
 class Environment(IEnvironment):
     def __init__(self, variables=None):
         super().__init__(variables)
-        if variables is None:
-            variables = {}
-        self.variables = variables
 
     def get_variable(self, name: str) -> Optional[EvaluationResult]:
         if name in self.variables:

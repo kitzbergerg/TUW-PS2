@@ -25,15 +25,19 @@ class Parser(object):
         p[0] = p[1]
 
     def p_expression(self, p):
-        '''expression : function_call
+        '''expression : if_else
+                      | function_call
                       | function_definition
                       | block
-                      | if_else
                       | integer
                       | list
                       | ID
                       | function_name'''
         p[0] = p[1]
+
+    def p_if_else(self, p):
+        '''if_else : IF LPAREN expression RPAREN expression ELSE expression'''
+        p[0] = IfElseNode(p[3], p[5], p[7])
 
     def p_assignment(self, p):
         '''assignment : ID ASSIGN expression'''
@@ -64,10 +68,6 @@ class Parser(object):
         '''block : L_CURLY_BRACKET block_list R_CURLY_BRACKET'''
         return_val = p[2].pop()
         p[0] = BlockNode(p[2], return_val)
-
-    def p_if_else(self, p):
-        '''if_else : IF LPAREN expression RPAREN expression ELSE expression'''
-        p[0] = IfElseNode(p[3], p[5], p[7])
 
     def p_block_list(self, p):
         '''block_list : expression

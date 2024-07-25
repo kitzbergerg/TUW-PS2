@@ -1,10 +1,10 @@
 at_index = |list, i| {
   at_index = |acc, list| {
-    if(
-      eq(i, acc),
-      head(list),
+    if (eq(i, acc)) {
+      head(list)
+    } else {
       at_index(plus(acc, 1), tail(list))
-    )
+    }
   }
   at_index(0, list)
 }

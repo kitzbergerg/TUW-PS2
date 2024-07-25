@@ -1,5 +1,5 @@
-from src.interpreter.function_executor import FunctionExecutor
-from src.interpreter.types import EvaluationResult, Type
+from interpreter.function_executor import FunctionExecutor
+from interpreter.types import EvaluationResult, Type
 
 
 def _mult(params: list[EvaluationResult]) -> EvaluationResult:
@@ -59,7 +59,7 @@ def _mod(params: list[EvaluationResult]) -> EvaluationResult:
 
 def _head(params: list[EvaluationResult]) -> EvaluationResult:
     result = params[0].value[0]
-    return EvaluationResult(result.type, result)
+    return EvaluationResult(result.node_type, result)
 
 
 def _tail(params: list[EvaluationResult]) -> EvaluationResult:

@@ -1,7 +1,7 @@
 from typing import Callable, List
 
-from src.ast_nodes import FunctionCallNode, FunctionDefinitionNode, IntegerNode
-from src.interpreter.types import Type, EvaluationResult
+from ast_nodes import FunctionCallNode, FunctionDefinitionNode, IntegerNode
+from interpreter.types import Type, EvaluationResult
 
 
 class FunctionExecutor:
@@ -19,7 +19,8 @@ class FunctionExecutor:
         for i, param in enumerate(args):
             assert isinstance(param, EvaluationResult)
             if self.parameters[i] is not None:
-                assert param.type == self.parameters[i]
+                assert param.type == self.parameters[
+                    i], f"Function arguments {[x.type for x in args]} do not match {self.parameters}"
             params.append(param)
 
         if len(args) == len(self.parameters):

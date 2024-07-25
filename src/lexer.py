@@ -2,13 +2,14 @@ import ply.lex as lex
 
 # List of token names.   This is always required
 reserved = {
+    'if': 'IF',
+    'else': 'ELSE',
+
     'plus': 'PLUS',
     'minus': 'MINUS',
     'mult': 'MULT',
     'div': 'DIV',
     'mod': 'MOD',
-    'if': 'IF',
-    'else': 'ELSE',
 
     'eq': 'EQ',
     'not': 'NOT',

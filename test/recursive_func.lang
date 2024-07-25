@@ -1,5 +1,5 @@
 fib = |x| {
-  if(less_than(x,2)) x
+  if (less_than(x,2)) x
   else plus(fib(minus(x, 1)), fib(minus(x, 2)))
 }
 print(fib(0))   # 0
