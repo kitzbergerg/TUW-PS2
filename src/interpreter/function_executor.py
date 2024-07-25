@@ -20,8 +20,8 @@ class FunctionExecutor:
         for i, param in enumerate(args):
             assert isinstance(param, EvaluationResult)
             if self.parameters[i] is not None:
-                assert param.type == self.parameters[
-                    i], f"Function arguments {[x.type for x in args]} do not match {self.parameters}"
+                assert param.type == self.parameters[i], \
+                    f"Function arguments for {self.name} do not match. Expected {self.parameters}, got {[x.type for x in args]}"
             params.append(param)
 
         if len(args) == len(self.parameters):

@@ -88,7 +88,7 @@ def _print(params: list[EvaluationResult]) -> EvaluationResult:
 
 
 functions = {
-    "eq": FunctionExecutor("eq", [Type.BOOLEAN, Type.BOOLEAN], _eq),
+    "eq": FunctionExecutor("eq", [None, None], _eq),
     "not": FunctionExecutor("not", [Type.BOOLEAN], _not),
     "and": FunctionExecutor("and", [Type.BOOLEAN, Type.BOOLEAN], _and),
     "or": FunctionExecutor("or", [Type.BOOLEAN, Type.BOOLEAN], _or),

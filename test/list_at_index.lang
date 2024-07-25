@@ -9,5 +9,5 @@ at_index = |list, i| {
   at_index(0, list)
 }
 my_list = [1,2,1,5,4]
-one = at_index(my_list, 2)
-print(one)
+print(at_index(my_list, 2)) # 1
+print(at_index(my_list, 4)) # 4
