@@ -82,8 +82,24 @@ def _if(params: list[EvaluationResult]) -> EvaluationResult:
     return EvaluationResult(result.type, result)
 
 
+def _as_str(params: EvaluationResult) -> str:
+    type = params.type
+    if type == Type.INTEGER:
+        return str(params.value)
+    elif type == Type.BOOLEAN:
+        return str(params.value)
+    elif type == Type.LIST:
+        return str([_as_str(x) for x in params.value])
+    elif type == Type.FUNCTION:
+        return f"Function({', '.join(params.value[0])})"
+    elif type == Type.UNIT:
+        return "()"
+    else:
+        raise Exception("Unexpected type")
+
+
 def _print(params: list[EvaluationResult]) -> EvaluationResult:
-    print(params[0].value)
+    print(_as_str(params[0]))
     return EvaluationResult(Type.UNIT, None)
 
 

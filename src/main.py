@@ -4,7 +4,7 @@ from parser import Parser
 
 
 def run_on_file(file_path):
-    print(f"Running on {file_path}...")
+    print(f"\nRunning {file_path}...")
 
     # Read the code from a file
     with open(file_path, 'r') as file:
@@ -17,7 +17,7 @@ def run_on_file(file_path):
     parser = Parser()
     parser.build()
     ast = parser.parser.parse(code, lexer=lexer.lexer)
-    print(ast)
+    # print(ast)
 
     # Create an instance of the interpreter
     interpreter = Interpreter()
@@ -32,9 +32,10 @@ if __name__ == '__main__':
     run_on_file('../test/returned_func_captures.lang')
     run_on_file('../test/partial_functions.lang')
     run_on_file('../test/recursive_func.lang')
-    run_on_file('../test/list_reduce.lang')
     run_on_file('../test/list_at_index.lang')
-    # run_on_file('../test/list_map.lang')
+    run_on_file('../test/list_reduce.lang')
+    run_on_file('../test/list_map.lang')
+    run_on_file('../test/print_values.lang')
 
     # Negative test runs:
     try:
