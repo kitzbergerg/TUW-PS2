@@ -27,10 +27,10 @@ class IEnvironment:
 
 
 class EvaluationResult:
-    def __init__(self, type: Type, value: any, environment: Optional[list[IEnvironment]] = None):
+    def __init__(self, type: Type, value: any, stack: Optional[list[IEnvironment]] = None):
         self.type = type
         self.value = value
-        self.stack = environment
+        self.stack = stack
 
 
 class Environment(IEnvironment):

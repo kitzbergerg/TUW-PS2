@@ -42,4 +42,4 @@ class FunctionExecutor:
 
             new_body = FunctionCallNode(self.name, new_args)
             new_function = FunctionDefinitionNode(reserved_keywords, new_body)
-            return EvaluationResult(Type.FUNCTION, new_function.children, environment=[])
+            return EvaluationResult(Type.FUNCTION, new_function.children, stack=[])
