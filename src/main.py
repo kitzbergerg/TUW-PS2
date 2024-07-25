@@ -1,4 +1,4 @@
-from src.interpreter import Interpreter
+from src.interpreter.interpreter import Interpreter
 from src.lexer import Lexer
 from src.parser import Parser
 
