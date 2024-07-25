@@ -59,11 +59,11 @@ def _mod(params: list[EvaluationResult]) -> EvaluationResult:
 
 def _head(params: list[EvaluationResult]) -> EvaluationResult:
     result = params[0].value[0]
-    return EvaluationResult(result.node_type, result)
+    return result
 
 
 def _tail(params: list[EvaluationResult]) -> EvaluationResult:
-    result = params[1:]
+    result = params[0].value[1:]
     return EvaluationResult(Type.LIST, result)
 
 

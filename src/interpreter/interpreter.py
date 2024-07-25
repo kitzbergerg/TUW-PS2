@@ -120,7 +120,7 @@ class Interpreter:
             return EvaluationResult(Type.INTEGER, node.value)
 
         if node.node_type == "list":
-            return EvaluationResult(Type.LIST, node.children)
+            return EvaluationResult(Type.LIST, [self._visit(x) for x in node.children])
 
         raise Exception(f"Cannot evaluate type {node.node_type}")
 

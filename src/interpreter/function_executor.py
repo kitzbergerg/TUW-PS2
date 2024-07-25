@@ -12,7 +12,8 @@ class FunctionExecutor:
         self.function = function
 
     def __call__(self, *args, **kwargs) -> EvaluationResult:
-        assert len(self.parameters) >= len(args)
+        assert len(self.parameters) >= len(args), \
+            f"Invalid number of arguments. Expected less than {len(self.parameters)} arguments, got {len(args)}"
         assert len(kwargs) == 0
 
         params = []
@@ -24,7 +25,8 @@ class FunctionExecutor:
             params.append(param)
 
         if len(args) == len(self.parameters):
-            return self.function(params)
+            result = self.function(params)
+            return result
         else:
             # Create a new function like:
             #   mult(2) -> |__RESERVED__| mult(2, __RESERVED__)
@@ -44,3 +46,6 @@ class FunctionExecutor:
             new_body = FunctionCallNode(self.name, new_args)
             new_function = FunctionDefinitionNode(reserved_keywords, new_body)
             return EvaluationResult(Type.FUNCTION, new_function.children, stack=[])
+
+    def __repr__(self):
+        return f"FunctionExecutor({self.name}, {self.parameters})"

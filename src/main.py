@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     # Negative test runs:
     try:
-        #run_on_file('../test/define_var_after_func_fails.lang')
+        run_on_file('../test/define_var_after_func_fails.lang')
         assert False
     except Exception as e:
         pass
