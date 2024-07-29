@@ -142,5 +142,5 @@ map = |list, op| if(is_empty(list)) list else {
 }
 my_list = [1,2,3]
 times_two = map(my_list, mult(2))
-print(times_two)  # [1,2,3]
+print(times_two)  # -> [2,4,6]
 ```

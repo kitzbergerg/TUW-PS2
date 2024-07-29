@@ -85,9 +85,9 @@ def _if(params: list[EvaluationResult]) -> EvaluationResult:
 def _as_str(params: EvaluationResult) -> str:
     type = params.type
     if type == Type.INTEGER:
-        return str(params.value)
+        return params.value
     elif type == Type.BOOLEAN:
-        return str(params.value)
+        return params.value
     elif type == Type.LIST:
         return str([_as_str(x) for x in params.value])
     elif type == Type.FUNCTION:
