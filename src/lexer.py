@@ -75,13 +75,8 @@ class Lexer(object):
         r'\#.*'
         pass
 
-    # Define a rule so we can track line numbers
-    def t_newline(self, t):
-        r'\n+'
-        t.lexer.lineno += len(t.value)
-
-    # A string containing ignored characters (spaces and tabs)
-    t_ignore = ' \t'
+    # A string containing ignored characters (spaces, tabs and newlines)
+    t_ignore = ' \t\n'
 
     # Error handling rule
     def t_error(self, t):

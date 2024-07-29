@@ -130,7 +130,12 @@ class Parser(object):
         p[0] = p[1]
 
     def p_error(self, p):
-        print(f"Syntax error at {p.value!r}")
+        print("Syntax error!", end=' ')
+        if not p:
+            print("Unexpected end of file!")
+            return
+        print(f"At line {p.lineno}.", end=' ')
+        print(f"Value: {p.value!r}")
 
     def build(self, **kwargs):
         self.parser = yacc.yacc(module=self, **kwargs)

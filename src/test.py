@@ -18,7 +18,7 @@ def run_on_file_fails(file_path):
     except AssertionError as e:
         raise e
     except Exception as e:
-        print(e)
+        print(f"Error: {e}")
         pass
 
 
@@ -35,9 +35,7 @@ if __name__ == '__main__':
     run_on_file('../test/positive/9_print_values.lang')
 
     # Negative test runs:
-    try:
-        run_on_file('../test/define_var_after_func_fails.lang')
-        assert False
-    except Exception as e:
-        pass
     run_on_file_fails('../test/negative/1_define_var_after_func.lang')
+    run_on_file_fails('../test/negative/2_syntax_error_middle_of_file.lang')
+    run_on_file_fails('../test/negative/3_syntax_error_end_of_file.lang')
+    run_on_file_fails('../test/negative/4_syntax_error_bracket_mismatch.lang')
