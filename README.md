@@ -8,7 +8,7 @@ The task is to develop an interpreter for a functional language using a dynamica
 
 * **unit** (represents a missing value, currently used for side effects like `print` where nothing is returned)
 * **integer**: Currently only positive can be created like `x = 1`. To get negatives you can `x = minus(0, 10)`.
-* **list**: Lists can be defined using `[]`. Lists can contain any values from `[0,1,2]` to `[*,1,+,2,[1,2]]`.
+* **list**: Lists can be defined using `[]`. Lists can contain any values from `[0,1,2]` to `[mult,1,plus,2,[1,2]]`.
 * **function**: See below
 
 ### Variables
